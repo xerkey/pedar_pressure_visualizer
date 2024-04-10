@@ -1,0 +1,1214 @@
+ # #:kivy
+
+<RoundedButton@Button>:
+    background_color: 0, 0, 0, 0
+    background_normal: ''
+    back_color: 0.3, 0.3, 0.3, 1
+    size_hint: None, None
+    size: 100, 100
+    canvas.before:
+        Color: 
+            rgba: (0.3, 0.75, 0.86, 1) if self.state=='down' else self.back_color
+        RoundedRectangle:
+            size: self.size
+            pos: self.pos
+            radius: [1000]
+
+<PressureVisualizer>:
+    orientation: 'vertical'
+    
+    BoxLayout:
+        orientation: 'horizontal'
+        size_hint: (1.0, 0.1)
+
+        # 背景色
+        canvas.before:
+            Color:
+                rgb: 0.2, 0.2, 0.2
+            Rectangle:
+                size:self.size
+                pos: self.pos
+
+        # Pathの入力部分
+        BoxLayout:
+
+            orientation: 'vertical'
+            size_hint: (0.9, 1.0)
+            
+            BoxLayout:
+                orientation: 'horizontal'
+                size_hint: (1.0, 0.4)
+                spacing: 10
+
+                AnchorLayout:
+                    size_hint: (0.95, 1.0)
+                    anchor_x: 'right'
+                    anchor_y: 'bottom'
+
+                    TextInput:
+                        id: play_path
+                        size_hint: .95, .7
+                        text: root.default_path
+                        font_size: self.height*0.5
+
+                AnchorLayout:
+                    size_hint: (0.05, 1.0)
+                    anchor_x: 'left'
+                    anchor_y: 'bottom'
+                    Button:
+                        size_hint: .8, .7
+                        text: 'Set'
+                        on_press: root.set_play_path()
+
+            AnchorLayout:
+                size_hint: (1.0, 0.25)
+                anchor_x: 'right'
+                anchor_y: 'center'
+                
+                Label:
+                    size_hint: .95, .9
+                    font_size: self.height*0.7
+                    text_size: self.size
+                    halign: 'right'
+                    valign: 'center'
+                    color: 0.6, 0.6, 0.6, 1.0
+                    text: root.responce
+
+            BoxLayout:
+                orientation: 'horizontal'
+                size_hint: (1.0, 0.35)
+                spacing: 10
+
+                AnchorLayout:
+                    size_hint: (0.85, 1.0)
+                    anchor_x: 'right'
+                    anchor_y: 'center'
+
+                    Slider:
+                        id: sld
+                        size_hint: .9, .3
+                        min: 0
+                        max: root.step
+                        value: root.counter
+                        on_touch_move: root.on_slider_move(self, self.value_normalized)
+
+                Label:
+                    size_hint: (0.15, 1.0)
+                    font_size: self.height*0.5
+                    text_size: self.size
+                    halign: 'left'
+                    valign: 'center'
+                    color: 0.6, 0.6, 0.6, 1.0
+                    text: 'Frame : ' + str(root.counter)
+
+
+        # Playボタンの部分
+        AnchorLayout:
+            size_hint: (0.1, 1.0)
+            anchor_x: 'center'
+            anchor_y: 'center'        
+            RoundedButton:
+                id: playback_button
+                size_hint: None, .7 # 縦の大きさだけ相対に
+                size: self.height, 0    # 横の大きさを縦と同じに, 縦の大きさはhintが優先されるので無視
+                text: 'Play'
+                on_press: root.playback_start()
+
+            MDSpinner:
+                size_hint: None, .7
+                size: self.height, 0
+                active: True if root.playback_button_state else False
+
+  
+    
+    BoxLayout:
+        size_hint: (1.0, 0.9)
+        orientation: 'horizontal'
+
+        canvas.before:
+
+            # 背景
+            Color:
+                rgb: 0.225, 0.225, 0.225
+            Rectangle:
+                size: self.size
+                pos: self.pos
+
+            Color:
+                rgb: 0.1, 0.1, 0.1
+            # 縦線
+            Line:
+                points: root.width*0.1, 0, root.width*0.1, self.height
+            Line:
+                points: root.width*0.2, 0, root.width*0.2, self.height
+            Line:
+                points: root.width*0.3, 0, root.width*0.3, self.height
+            Line:
+                points: root.width*0.4, 0, root.width*0.4, self.height
+            Line:
+                points: root.width*0.5, 0, root.width*0.5, self.height
+            Line:
+                points: root.width*0.6, 0, root.width*0.6, self.height
+            Line:
+                points: root.width*0.7, 0, root.width*0.7, self.height
+            Line:
+                points: root.width*0.8, 0, root.width*0.8, self.height
+            Line:
+                points: root.width*0.9, 0, root.width*0.9, self.height
+
+            # 横線
+            Line:
+                points: 0, self.height*0.1, root.width, self.height*0.1
+            Line:
+                points: 0, self.height*0.2, root.width, self.height*0.2
+            Line:
+                points: 0, self.height*0.3, root.width, self.height*0.3
+            Line:
+                points: 0, self.height*0.4, root.width, self.height*0.4
+            Line:
+                points: 0, self.height*0.5, root.width, self.height*0.5
+            Line:
+                points: 0, self.height*0.6, root.width, self.height*0.6
+            Line:
+                points: 0, self.height*0.7, root.width, self.height*0.7
+            Line:
+                points: 0, self.height*0.8, root.width, self.height*0.8
+            Line:
+                points: 0, self.height*0.9, root.width, self.height*0.9
+
+
+            # Color:
+            #     rgb: 0.4, 0.4, 0.4
+            # Bezier:
+            #     points: root.bezier_left[0]
+            # Bezier:
+            #     points: root.bezier_left[1]
+            # Bezier:
+            #     points: root.bezier_left[2]
+            # Bezier:
+            #     points: root.bezier_left[3]
+            # Bezier:
+            #     points: root.bezier_left[4]
+            # Bezier:
+            #     points: root.bezier_left[5]
+            
+            # Bezier:
+            #     points: root.bezier_right[0]
+            # Bezier:
+            #     points: root.bezier_right[1]
+            # Bezier:
+            #     points: root.bezier_right[2]
+            # Bezier:
+            #     points: root.bezier_right[3]
+            # Bezier:
+            #     points: root.bezier_right[4]
+            # Bezier:
+            #     points: root.bezier_right[5]
+
+
+
+
+
+        canvas:
+            Color:
+                rgba: root.color_left[0]
+            Rectangle:
+                pos: root.rectangle_points_left[0][0] * (self.width/root.window_size[0]), root.rectangle_points_left[0][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[0][0] * (self.width/root.window_size[0]), root.rectangle_size[0][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[1]
+            Rectangle:
+                pos: root.rectangle_points_left[1][0] * (self.width/root.window_size[0]), root.rectangle_points_left[1][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[1][0] * (self.width/root.window_size[0]), root.rectangle_size[1][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[2]
+            Rectangle:
+                pos: root.rectangle_points_left[2][0] * (self.width/root.window_size[0]), root.rectangle_points_left[2][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[2][0] * (self.width/root.window_size[0]), root.rectangle_size[2][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[3]
+            Rectangle:
+                pos: root.rectangle_points_left[3][0] * (self.width/root.window_size[0]), root.rectangle_points_left[3][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[3][0] * (self.width/root.window_size[0]), root.rectangle_size[3][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[4]
+            Rectangle:
+                pos: root.rectangle_points_left[4][0] * (self.width/root.window_size[0]), root.rectangle_points_left[4][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[4][0] * (self.width/root.window_size[0]), root.rectangle_size[4][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[5]
+            Rectangle:
+                pos: root.rectangle_points_left[5][0] * (self.width/root.window_size[0]), root.rectangle_points_left[5][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[5][0] * (self.width/root.window_size[0]), root.rectangle_size[5][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[6]
+            Rectangle:
+                pos: root.rectangle_points_left[6][0] * (self.width/root.window_size[0]), root.rectangle_points_left[6][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[6][0] * (self.width/root.window_size[0]), root.rectangle_size[6][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[7]
+            Rectangle:
+                pos: root.rectangle_points_left[7][0] * (self.width/root.window_size[0]), root.rectangle_points_left[7][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[7][0] * (self.width/root.window_size[0]), root.rectangle_size[7][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[8]
+            Rectangle:
+                pos: root.rectangle_points_left[8][0] * (self.width/root.window_size[0]), root.rectangle_points_left[8][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[8][0] * (self.width/root.window_size[0]), root.rectangle_size[8][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[9]
+            Rectangle:
+                pos: root.rectangle_points_left[9][0] * (self.width/root.window_size[0]), root.rectangle_points_left[9][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[9][0] * (self.width/root.window_size[0]), root.rectangle_size[9][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[10]
+            Rectangle:
+                pos: root.rectangle_points_left[10][0] * (self.width/root.window_size[0]), root.rectangle_points_left[10][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[10][0] * (self.width/root.window_size[0]), root.rectangle_size[10][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[11]
+            Rectangle:
+                pos: root.rectangle_points_left[11][0] * (self.width/root.window_size[0]), root.rectangle_points_left[11][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[11][0] * (self.width/root.window_size[0]), root.rectangle_size[11][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[12]
+            Rectangle:
+                pos: root.rectangle_points_left[12][0] * (self.width/root.window_size[0]), root.rectangle_points_left[12][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[12][0] * (self.width/root.window_size[0]), root.rectangle_size[12][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[13]
+            Rectangle:
+                pos: root.rectangle_points_left[13][0] * (self.width/root.window_size[0]), root.rectangle_points_left[13][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[13][0] * (self.width/root.window_size[0]), root.rectangle_size[13][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[14]
+            Rectangle:
+                pos: root.rectangle_points_left[14][0] * (self.width/root.window_size[0]), root.rectangle_points_left[14][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[14][0] * (self.width/root.window_size[0]), root.rectangle_size[14][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[15]
+            Rectangle:
+                pos: root.rectangle_points_left[15][0] * (self.width/root.window_size[0]), root.rectangle_points_left[15][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[15][0] * (self.width/root.window_size[0]), root.rectangle_size[15][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[16]
+            Rectangle:
+                pos: root.rectangle_points_left[16][0] * (self.width/root.window_size[0]), root.rectangle_points_left[16][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[16][0] * (self.width/root.window_size[0]), root.rectangle_size[16][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[17]
+            Rectangle:
+                pos: root.rectangle_points_left[17][0] * (self.width/root.window_size[0]), root.rectangle_points_left[17][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[17][0] * (self.width/root.window_size[0]), root.rectangle_size[17][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[18]
+            Rectangle:
+                pos: root.rectangle_points_left[18][0] * (self.width/root.window_size[0]), root.rectangle_points_left[18][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[18][0] * (self.width/root.window_size[0]), root.rectangle_size[18][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[19]
+            Rectangle:
+                pos: root.rectangle_points_left[19][0] * (self.width/root.window_size[0]), root.rectangle_points_left[19][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[19][0] * (self.width/root.window_size[0]), root.rectangle_size[19][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[20]
+            Rectangle:
+                pos: root.rectangle_points_left[20][0] * (self.width/root.window_size[0]), root.rectangle_points_left[20][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[20][0] * (self.width/root.window_size[0]), root.rectangle_size[20][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[21]
+            Rectangle:
+                pos: root.rectangle_points_left[21][0] * (self.width/root.window_size[0]), root.rectangle_points_left[21][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[21][0] * (self.width/root.window_size[0]), root.rectangle_size[21][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[22]
+            Rectangle:
+                pos: root.rectangle_points_left[22][0] * (self.width/root.window_size[0]), root.rectangle_points_left[22][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[22][0] * (self.width/root.window_size[0]), root.rectangle_size[22][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[23]
+            Rectangle:
+                pos: root.rectangle_points_left[23][0] * (self.width/root.window_size[0]), root.rectangle_points_left[23][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[23][0] * (self.width/root.window_size[0]), root.rectangle_size[23][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[24]
+            Rectangle:
+                pos: root.rectangle_points_left[24][0] * (self.width/root.window_size[0]), root.rectangle_points_left[24][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[24][0] * (self.width/root.window_size[0]), root.rectangle_size[24][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[25]
+            Rectangle:
+                pos: root.rectangle_points_left[25][0] * (self.width/root.window_size[0]), root.rectangle_points_left[25][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[25][0] * (self.width/root.window_size[0]), root.rectangle_size[25][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[26]
+            Rectangle:
+                pos: root.rectangle_points_left[26][0] * (self.width/root.window_size[0]), root.rectangle_points_left[26][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[26][0] * (self.width/root.window_size[0]), root.rectangle_size[26][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[27]
+            Rectangle:
+                pos: root.rectangle_points_left[27][0] * (self.width/root.window_size[0]), root.rectangle_points_left[27][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[27][0] * (self.width/root.window_size[0]), root.rectangle_size[27][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[28]
+            Rectangle:
+                pos: root.rectangle_points_left[28][0] * (self.width/root.window_size[0]), root.rectangle_points_left[28][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[28][0] * (self.width/root.window_size[0]), root.rectangle_size[28][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[29]
+            Rectangle:
+                pos: root.rectangle_points_left[29][0] * (self.width/root.window_size[0]), root.rectangle_points_left[29][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[29][0] * (self.width/root.window_size[0]), root.rectangle_size[29][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[30]
+            Rectangle:
+                pos: root.rectangle_points_left[30][0] * (self.width/root.window_size[0]), root.rectangle_points_left[30][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[30][0] * (self.width/root.window_size[0]), root.rectangle_size[30][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[31]
+            Rectangle:
+                pos: root.rectangle_points_left[31][0] * (self.width/root.window_size[0]), root.rectangle_points_left[31][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[31][0] * (self.width/root.window_size[0]), root.rectangle_size[31][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[32]
+            Rectangle:
+                pos: root.rectangle_points_left[32][0] * (self.width/root.window_size[0]), root.rectangle_points_left[32][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[32][0] * (self.width/root.window_size[0]), root.rectangle_size[32][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[33]
+            Rectangle:
+                pos: root.rectangle_points_left[33][0] * (self.width/root.window_size[0]), root.rectangle_points_left[33][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[33][0] * (self.width/root.window_size[0]), root.rectangle_size[33][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[34]
+            Rectangle:
+                pos: root.rectangle_points_left[34][0] * (self.width/root.window_size[0]), root.rectangle_points_left[34][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[34][0] * (self.width/root.window_size[0]), root.rectangle_size[34][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[35]
+            Rectangle:
+                pos: root.rectangle_points_left[35][0] * (self.width/root.window_size[0]), root.rectangle_points_left[35][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[35][0] * (self.width/root.window_size[0]), root.rectangle_size[35][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[36]
+            Rectangle:
+                pos: root.rectangle_points_left[36][0] * (self.width/root.window_size[0]), root.rectangle_points_left[36][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[36][0] * (self.width/root.window_size[0]), root.rectangle_size[36][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[37]
+            Rectangle:
+                pos: root.rectangle_points_left[37][0] * (self.width/root.window_size[0]), root.rectangle_points_left[37][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[37][0] * (self.width/root.window_size[0]), root.rectangle_size[37][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[38]
+            Rectangle:
+                pos: root.rectangle_points_left[38][0] * (self.width/root.window_size[0]), root.rectangle_points_left[38][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[38][0] * (self.width/root.window_size[0]), root.rectangle_size[38][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[39]
+            Rectangle:
+                pos: root.rectangle_points_left[39][0] * (self.width/root.window_size[0]), root.rectangle_points_left[39][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[39][0] * (self.width/root.window_size[0]), root.rectangle_size[39][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[40]
+            Rectangle:
+                pos: root.rectangle_points_left[40][0] * (self.width/root.window_size[0]), root.rectangle_points_left[40][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[40][0] * (self.width/root.window_size[0]), root.rectangle_size[40][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[41]
+            Rectangle:
+                pos: root.rectangle_points_left[41][0] * (self.width/root.window_size[0]), root.rectangle_points_left[41][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[41][0] * (self.width/root.window_size[0]), root.rectangle_size[41][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[42]
+            Rectangle:
+                pos: root.rectangle_points_left[42][0] * (self.width/root.window_size[0]), root.rectangle_points_left[42][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[42][0] * (self.width/root.window_size[0]), root.rectangle_size[42][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[43]
+            Rectangle:
+                pos: root.rectangle_points_left[43][0] * (self.width/root.window_size[0]), root.rectangle_points_left[43][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[43][0] * (self.width/root.window_size[0]), root.rectangle_size[43][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[44]
+            Rectangle:
+                pos: root.rectangle_points_left[44][0] * (self.width/root.window_size[0]), root.rectangle_points_left[44][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[44][0] * (self.width/root.window_size[0]), root.rectangle_size[44][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[45]
+            Rectangle:
+                pos: root.rectangle_points_left[45][0] * (self.width/root.window_size[0]), root.rectangle_points_left[45][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[45][0] * (self.width/root.window_size[0]), root.rectangle_size[45][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[46]
+            Rectangle:
+                pos: root.rectangle_points_left[46][0] * (self.width/root.window_size[0]), root.rectangle_points_left[46][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[46][0] * (self.width/root.window_size[0]), root.rectangle_size[46][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[47]
+            Rectangle:
+                pos: root.rectangle_points_left[47][0] * (self.width/root.window_size[0]), root.rectangle_points_left[47][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[47][0] * (self.width/root.window_size[0]), root.rectangle_size[47][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[48]
+            Rectangle:
+                pos: root.rectangle_points_left[48][0] * (self.width/root.window_size[0]), root.rectangle_points_left[48][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[48][0] * (self.width/root.window_size[0]), root.rectangle_size[48][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[49]
+            Rectangle:
+                pos: root.rectangle_points_left[49][0] * (self.width/root.window_size[0]), root.rectangle_points_left[49][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[49][0] * (self.width/root.window_size[0]), root.rectangle_size[49][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[50]
+            Rectangle:
+                pos: root.rectangle_points_left[50][0] * (self.width/root.window_size[0]), root.rectangle_points_left[50][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[50][0] * (self.width/root.window_size[0]), root.rectangle_size[50][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[51]
+            Rectangle:
+                pos: root.rectangle_points_left[51][0] * (self.width/root.window_size[0]), root.rectangle_points_left[51][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[51][0] * (self.width/root.window_size[0]), root.rectangle_size[51][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[52]
+            Rectangle:
+                pos: root.rectangle_points_left[52][0] * (self.width/root.window_size[0]), root.rectangle_points_left[52][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[52][0] * (self.width/root.window_size[0]), root.rectangle_size[52][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[53]
+            Rectangle:
+                pos: root.rectangle_points_left[53][0] * (self.width/root.window_size[0]), root.rectangle_points_left[53][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[53][0] * (self.width/root.window_size[0]), root.rectangle_size[53][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[54]
+            Rectangle:
+                pos: root.rectangle_points_left[54][0] * (self.width/root.window_size[0]), root.rectangle_points_left[54][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[54][0] * (self.width/root.window_size[0]), root.rectangle_size[54][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[55]
+            Rectangle:
+                pos: root.rectangle_points_left[55][0] * (self.width/root.window_size[0]), root.rectangle_points_left[55][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[55][0] * (self.width/root.window_size[0]), root.rectangle_size[55][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[56]
+            Rectangle:
+                pos: root.rectangle_points_left[56][0] * (self.width/root.window_size[0]), root.rectangle_points_left[56][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[56][0] * (self.width/root.window_size[0]), root.rectangle_size[56][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[57]
+            Rectangle:
+                pos: root.rectangle_points_left[57][0] * (self.width/root.window_size[0]), root.rectangle_points_left[57][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[57][0] * (self.width/root.window_size[0]), root.rectangle_size[57][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[58]
+            Rectangle:
+                pos: root.rectangle_points_left[58][0] * (self.width/root.window_size[0]), root.rectangle_points_left[58][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[58][0] * (self.width/root.window_size[0]), root.rectangle_size[58][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[59]
+            Rectangle:
+                pos: root.rectangle_points_left[59][0] * (self.width/root.window_size[0]), root.rectangle_points_left[59][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[59][0] * (self.width/root.window_size[0]), root.rectangle_size[59][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[60]
+            Rectangle:
+                pos: root.rectangle_points_left[60][0] * (self.width/root.window_size[0]), root.rectangle_points_left[60][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[60][0] * (self.width/root.window_size[0]), root.rectangle_size[60][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[61]
+            Rectangle:
+                pos: root.rectangle_points_left[61][0] * (self.width/root.window_size[0]), root.rectangle_points_left[61][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[61][0] * (self.width/root.window_size[0]), root.rectangle_size[61][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[62]
+            Rectangle:
+                pos: root.rectangle_points_left[62][0] * (self.width/root.window_size[0]), root.rectangle_points_left[62][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[62][0] * (self.width/root.window_size[0]), root.rectangle_size[62][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[63]
+            Rectangle:
+                pos: root.rectangle_points_left[63][0] * (self.width/root.window_size[0]), root.rectangle_points_left[63][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[63][0] * (self.width/root.window_size[0]), root.rectangle_size[63][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[64]
+            Rectangle:
+                pos: root.rectangle_points_left[64][0] * (self.width/root.window_size[0]), root.rectangle_points_left[64][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[64][0] * (self.width/root.window_size[0]), root.rectangle_size[64][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[65]
+            Rectangle:
+                pos: root.rectangle_points_left[65][0] * (self.width/root.window_size[0]), root.rectangle_points_left[65][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[65][0] * (self.width/root.window_size[0]), root.rectangle_size[65][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[66]
+            Rectangle:
+                pos: root.rectangle_points_left[66][0] * (self.width/root.window_size[0]), root.rectangle_points_left[66][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[66][0] * (self.width/root.window_size[0]), root.rectangle_size[66][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[67]
+            Rectangle:
+                pos: root.rectangle_points_left[67][0] * (self.width/root.window_size[0]), root.rectangle_points_left[67][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[67][0] * (self.width/root.window_size[0]), root.rectangle_size[67][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[68]
+            Rectangle:
+                pos: root.rectangle_points_left[68][0] * (self.width/root.window_size[0]), root.rectangle_points_left[68][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[68][0] * (self.width/root.window_size[0]), root.rectangle_size[68][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[69]
+            Rectangle:
+                pos: root.rectangle_points_left[69][0] * (self.width/root.window_size[0]), root.rectangle_points_left[69][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[69][0] * (self.width/root.window_size[0]), root.rectangle_size[69][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[70]
+            Rectangle:
+                pos: root.rectangle_points_left[70][0] * (self.width/root.window_size[0]), root.rectangle_points_left[70][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[70][0] * (self.width/root.window_size[0]), root.rectangle_size[70][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[71]
+            Rectangle:
+                pos: root.rectangle_points_left[71][0] * (self.width/root.window_size[0]), root.rectangle_points_left[71][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[71][0] * (self.width/root.window_size[0]), root.rectangle_size[71][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[72]
+            Rectangle:
+                pos: root.rectangle_points_left[72][0] * (self.width/root.window_size[0]), root.rectangle_points_left[72][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[72][0] * (self.width/root.window_size[0]), root.rectangle_size[72][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[73]
+            Rectangle:
+                pos: root.rectangle_points_left[73][0] * (self.width/root.window_size[0]), root.rectangle_points_left[73][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[73][0] * (self.width/root.window_size[0]), root.rectangle_size[73][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[74]
+            Rectangle:
+                pos: root.rectangle_points_left[74][0] * (self.width/root.window_size[0]), root.rectangle_points_left[74][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[74][0] * (self.width/root.window_size[0]), root.rectangle_size[74][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[75]
+            Rectangle:
+                pos: root.rectangle_points_left[75][0] * (self.width/root.window_size[0]), root.rectangle_points_left[75][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[75][0] * (self.width/root.window_size[0]), root.rectangle_size[75][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[76]
+            Rectangle:
+                pos: root.rectangle_points_left[76][0] * (self.width/root.window_size[0]), root.rectangle_points_left[76][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[76][0] * (self.width/root.window_size[0]), root.rectangle_size[76][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[77]
+            Rectangle:
+                pos: root.rectangle_points_left[77][0] * (self.width/root.window_size[0]), root.rectangle_points_left[77][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[77][0] * (self.width/root.window_size[0]), root.rectangle_size[77][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[78]
+            Rectangle:
+                pos: root.rectangle_points_left[78][0] * (self.width/root.window_size[0]), root.rectangle_points_left[78][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[78][0] * (self.width/root.window_size[0]), root.rectangle_size[78][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[79]
+            Rectangle:
+                pos: root.rectangle_points_left[79][0] * (self.width/root.window_size[0]), root.rectangle_points_left[79][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[79][0] * (self.width/root.window_size[0]), root.rectangle_size[79][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[80]
+            Rectangle:
+                pos: root.rectangle_points_left[80][0] * (self.width/root.window_size[0]), root.rectangle_points_left[80][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[80][0] * (self.width/root.window_size[0]), root.rectangle_size[80][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[81]
+            Rectangle:
+                pos: root.rectangle_points_left[81][0] * (self.width/root.window_size[0]), root.rectangle_points_left[81][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[81][0] * (self.width/root.window_size[0]), root.rectangle_size[81][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[82]
+            Rectangle:
+                pos: root.rectangle_points_left[82][0] * (self.width/root.window_size[0]), root.rectangle_points_left[82][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[82][0] * (self.width/root.window_size[0]), root.rectangle_size[82][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[83]
+            Rectangle:
+                pos: root.rectangle_points_left[83][0] * (self.width/root.window_size[0]), root.rectangle_points_left[83][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[83][0] * (self.width/root.window_size[0]), root.rectangle_size[83][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[84]
+            Rectangle:
+                pos: root.rectangle_points_left[84][0] * (self.width/root.window_size[0]), root.rectangle_points_left[84][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[84][0] * (self.width/root.window_size[0]), root.rectangle_size[84][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[85]
+            Rectangle:
+                pos: root.rectangle_points_left[85][0] * (self.width/root.window_size[0]), root.rectangle_points_left[85][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[85][0] * (self.width/root.window_size[0]), root.rectangle_size[85][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[86]
+            Rectangle:
+                pos: root.rectangle_points_left[86][0] * (self.width/root.window_size[0]), root.rectangle_points_left[86][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[86][0] * (self.width/root.window_size[0]), root.rectangle_size[86][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[87]
+            Rectangle:
+                pos: root.rectangle_points_left[87][0] * (self.width/root.window_size[0]), root.rectangle_points_left[87][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[87][0] * (self.width/root.window_size[0]), root.rectangle_size[87][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[88]
+            Rectangle:
+                pos: root.rectangle_points_left[88][0] * (self.width/root.window_size[0]), root.rectangle_points_left[88][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[88][0] * (self.width/root.window_size[0]), root.rectangle_size[88][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[89]
+            Rectangle:
+                pos: root.rectangle_points_left[89][0] * (self.width/root.window_size[0]), root.rectangle_points_left[89][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[89][0] * (self.width/root.window_size[0]), root.rectangle_size[89][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[90]
+            Rectangle:
+                pos: root.rectangle_points_left[90][0] * (self.width/root.window_size[0]), root.rectangle_points_left[90][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[90][0] * (self.width/root.window_size[0]), root.rectangle_size[90][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[91]
+            Rectangle:
+                pos: root.rectangle_points_left[91][0] * (self.width/root.window_size[0]), root.rectangle_points_left[91][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[91][0] * (self.width/root.window_size[0]), root.rectangle_size[91][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[92]
+            Rectangle:
+                pos: root.rectangle_points_left[92][0] * (self.width/root.window_size[0]), root.rectangle_points_left[92][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[92][0] * (self.width/root.window_size[0]), root.rectangle_size[92][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[93]
+            Rectangle:
+                pos: root.rectangle_points_left[93][0] * (self.width/root.window_size[0]), root.rectangle_points_left[93][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[93][0] * (self.width/root.window_size[0]), root.rectangle_size[93][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[94]
+            Rectangle:
+                pos: root.rectangle_points_left[94][0] * (self.width/root.window_size[0]), root.rectangle_points_left[94][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[94][0] * (self.width/root.window_size[0]), root.rectangle_size[94][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[95]
+            Rectangle:
+                pos: root.rectangle_points_left[95][0] * (self.width/root.window_size[0]), root.rectangle_points_left[95][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[95][0] * (self.width/root.window_size[0]), root.rectangle_size[95][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[96]
+            Rectangle:
+                pos: root.rectangle_points_left[96][0] * (self.width/root.window_size[0]), root.rectangle_points_left[96][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[96][0] * (self.width/root.window_size[0]), root.rectangle_size[96][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[97]
+            Rectangle:
+                pos: root.rectangle_points_left[97][0] * (self.width/root.window_size[0]), root.rectangle_points_left[97][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[97][0] * (self.width/root.window_size[0]), root.rectangle_size[97][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_left[98]
+            Rectangle:
+                pos: root.rectangle_points_left[98][0] * (self.width/root.window_size[0]), root.rectangle_points_left[98][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[98][0] * (self.width/root.window_size[0]), root.rectangle_size[98][1] * (self.width/root.window_size[1])
+
+
+
+            
+
+
+
+
+
+
+
+
+            Color:
+                rgba: root.color_right[0]
+            Rectangle:
+                pos: root.rectangle_points_right[0][0] * (self.width/root.window_size[0]), root.rectangle_points_right[0][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[0][0] * (self.width/root.window_size[0]), root.rectangle_size[0][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[1]
+            Rectangle:
+                pos: root.rectangle_points_right[1][0] * (self.width/root.window_size[0]), root.rectangle_points_right[1][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[1][0] * (self.width/root.window_size[0]), root.rectangle_size[1][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[2]
+            Rectangle:
+                pos: root.rectangle_points_right[2][0] * (self.width/root.window_size[0]), root.rectangle_points_right[2][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[2][0] * (self.width/root.window_size[0]), root.rectangle_size[2][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[3]
+            Rectangle:
+                pos: root.rectangle_points_right[3][0] * (self.width/root.window_size[0]), root.rectangle_points_right[3][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[3][0] * (self.width/root.window_size[0]), root.rectangle_size[3][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[4]
+            Rectangle:
+                pos: root.rectangle_points_right[4][0] * (self.width/root.window_size[0]), root.rectangle_points_right[4][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[4][0] * (self.width/root.window_size[0]), root.rectangle_size[4][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[5]
+            Rectangle:
+                pos: root.rectangle_points_right[5][0] * (self.width/root.window_size[0]), root.rectangle_points_right[5][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[5][0] * (self.width/root.window_size[0]), root.rectangle_size[5][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[6]
+            Rectangle:
+                pos: root.rectangle_points_right[6][0] * (self.width/root.window_size[0]), root.rectangle_points_right[6][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[6][0] * (self.width/root.window_size[0]), root.rectangle_size[6][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[7]
+            Rectangle:
+                pos: root.rectangle_points_right[7][0] * (self.width/root.window_size[0]), root.rectangle_points_right[7][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[7][0] * (self.width/root.window_size[0]), root.rectangle_size[7][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[8]
+            Rectangle:
+                pos: root.rectangle_points_right[8][0] * (self.width/root.window_size[0]), root.rectangle_points_right[8][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[8][0] * (self.width/root.window_size[0]), root.rectangle_size[8][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[9]
+            Rectangle:
+                pos: root.rectangle_points_right[9][0] * (self.width/root.window_size[0]), root.rectangle_points_right[9][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[9][0] * (self.width/root.window_size[0]), root.rectangle_size[9][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[10]
+            Rectangle:
+                pos: root.rectangle_points_right[10][0] * (self.width/root.window_size[0]), root.rectangle_points_right[10][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[10][0] * (self.width/root.window_size[0]), root.rectangle_size[10][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[11]
+            Rectangle:
+                pos: root.rectangle_points_right[11][0] * (self.width/root.window_size[0]), root.rectangle_points_right[11][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[11][0] * (self.width/root.window_size[0]), root.rectangle_size[11][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[12]
+            Rectangle:
+                pos: root.rectangle_points_right[12][0] * (self.width/root.window_size[0]), root.rectangle_points_right[12][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[12][0] * (self.width/root.window_size[0]), root.rectangle_size[12][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[13]
+            Rectangle:
+                pos: root.rectangle_points_right[13][0] * (self.width/root.window_size[0]), root.rectangle_points_right[13][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[13][0] * (self.width/root.window_size[0]), root.rectangle_size[13][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[14]
+            Rectangle:
+                pos: root.rectangle_points_right[14][0] * (self.width/root.window_size[0]), root.rectangle_points_right[14][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[14][0] * (self.width/root.window_size[0]), root.rectangle_size[14][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[15]
+            Rectangle:
+                pos: root.rectangle_points_right[15][0] * (self.width/root.window_size[0]), root.rectangle_points_right[15][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[15][0] * (self.width/root.window_size[0]), root.rectangle_size[15][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[16]
+            Rectangle:
+                pos: root.rectangle_points_right[16][0] * (self.width/root.window_size[0]), root.rectangle_points_right[16][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[16][0] * (self.width/root.window_size[0]), root.rectangle_size[16][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[17]
+            Rectangle:
+                pos: root.rectangle_points_right[17][0] * (self.width/root.window_size[0]), root.rectangle_points_right[17][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[17][0] * (self.width/root.window_size[0]), root.rectangle_size[17][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[18]
+            Rectangle:
+                pos: root.rectangle_points_right[18][0] * (self.width/root.window_size[0]), root.rectangle_points_right[18][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[18][0] * (self.width/root.window_size[0]), root.rectangle_size[18][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[19]
+            Rectangle:
+                pos: root.rectangle_points_right[19][0] * (self.width/root.window_size[0]), root.rectangle_points_right[19][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[19][0] * (self.width/root.window_size[0]), root.rectangle_size[19][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[20]
+            Rectangle:
+                pos: root.rectangle_points_right[20][0] * (self.width/root.window_size[0]), root.rectangle_points_right[20][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[20][0] * (self.width/root.window_size[0]), root.rectangle_size[20][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[21]
+            Rectangle:
+                pos: root.rectangle_points_right[21][0] * (self.width/root.window_size[0]), root.rectangle_points_right[21][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[21][0] * (self.width/root.window_size[0]), root.rectangle_size[21][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[22]
+            Rectangle:
+                pos: root.rectangle_points_right[22][0] * (self.width/root.window_size[0]), root.rectangle_points_right[22][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[22][0] * (self.width/root.window_size[0]), root.rectangle_size[22][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[23]
+            Rectangle:
+                pos: root.rectangle_points_right[23][0] * (self.width/root.window_size[0]), root.rectangle_points_right[23][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[23][0] * (self.width/root.window_size[0]), root.rectangle_size[23][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[24]
+            Rectangle:
+                pos: root.rectangle_points_right[24][0] * (self.width/root.window_size[0]), root.rectangle_points_right[24][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[24][0] * (self.width/root.window_size[0]), root.rectangle_size[24][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[25]
+            Rectangle:
+                pos: root.rectangle_points_right[25][0] * (self.width/root.window_size[0]), root.rectangle_points_right[25][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[25][0] * (self.width/root.window_size[0]), root.rectangle_size[25][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[26]
+            Rectangle:
+                pos: root.rectangle_points_right[26][0] * (self.width/root.window_size[0]), root.rectangle_points_right[26][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[26][0] * (self.width/root.window_size[0]), root.rectangle_size[26][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[27]
+            Rectangle:
+                pos: root.rectangle_points_right[27][0] * (self.width/root.window_size[0]), root.rectangle_points_right[27][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[27][0] * (self.width/root.window_size[0]), root.rectangle_size[27][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[28]
+            Rectangle:
+                pos: root.rectangle_points_right[28][0] * (self.width/root.window_size[0]), root.rectangle_points_right[28][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[28][0] * (self.width/root.window_size[0]), root.rectangle_size[28][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[29]
+            Rectangle:
+                pos: root.rectangle_points_right[29][0] * (self.width/root.window_size[0]), root.rectangle_points_right[29][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[29][0] * (self.width/root.window_size[0]), root.rectangle_size[29][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[30]
+            Rectangle:
+                pos: root.rectangle_points_right[30][0] * (self.width/root.window_size[0]), root.rectangle_points_right[30][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[30][0] * (self.width/root.window_size[0]), root.rectangle_size[30][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[31]
+            Rectangle:
+                pos: root.rectangle_points_right[31][0] * (self.width/root.window_size[0]), root.rectangle_points_right[31][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[31][0] * (self.width/root.window_size[0]), root.rectangle_size[31][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[32]
+            Rectangle:
+                pos: root.rectangle_points_right[32][0] * (self.width/root.window_size[0]), root.rectangle_points_right[32][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[32][0] * (self.width/root.window_size[0]), root.rectangle_size[32][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[33]
+            Rectangle:
+                pos: root.rectangle_points_right[33][0] * (self.width/root.window_size[0]), root.rectangle_points_right[33][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[33][0] * (self.width/root.window_size[0]), root.rectangle_size[33][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[34]
+            Rectangle:
+                pos: root.rectangle_points_right[34][0] * (self.width/root.window_size[0]), root.rectangle_points_right[34][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[34][0] * (self.width/root.window_size[0]), root.rectangle_size[34][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[35]
+            Rectangle:
+                pos: root.rectangle_points_right[35][0] * (self.width/root.window_size[0]), root.rectangle_points_right[35][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[35][0] * (self.width/root.window_size[0]), root.rectangle_size[35][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[36]
+            Rectangle:
+                pos: root.rectangle_points_right[36][0] * (self.width/root.window_size[0]), root.rectangle_points_right[36][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[36][0] * (self.width/root.window_size[0]), root.rectangle_size[36][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[37]
+            Rectangle:
+                pos: root.rectangle_points_right[37][0] * (self.width/root.window_size[0]), root.rectangle_points_right[37][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[37][0] * (self.width/root.window_size[0]), root.rectangle_size[37][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[38]
+            Rectangle:
+                pos: root.rectangle_points_right[38][0] * (self.width/root.window_size[0]), root.rectangle_points_right[38][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[38][0] * (self.width/root.window_size[0]), root.rectangle_size[38][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[39]
+            Rectangle:
+                pos: root.rectangle_points_right[39][0] * (self.width/root.window_size[0]), root.rectangle_points_right[39][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[39][0] * (self.width/root.window_size[0]), root.rectangle_size[39][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[40]
+            Rectangle:
+                pos: root.rectangle_points_right[40][0] * (self.width/root.window_size[0]), root.rectangle_points_right[40][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[40][0] * (self.width/root.window_size[0]), root.rectangle_size[40][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[41]
+            Rectangle:
+                pos: root.rectangle_points_right[41][0] * (self.width/root.window_size[0]), root.rectangle_points_right[41][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[41][0] * (self.width/root.window_size[0]), root.rectangle_size[41][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[42]
+            Rectangle:
+                pos: root.rectangle_points_right[42][0] * (self.width/root.window_size[0]), root.rectangle_points_right[42][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[42][0] * (self.width/root.window_size[0]), root.rectangle_size[42][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[43]
+            Rectangle:
+                pos: root.rectangle_points_right[43][0] * (self.width/root.window_size[0]), root.rectangle_points_right[43][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[43][0] * (self.width/root.window_size[0]), root.rectangle_size[43][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[44]
+            Rectangle:
+                pos: root.rectangle_points_right[44][0] * (self.width/root.window_size[0]), root.rectangle_points_right[44][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[44][0] * (self.width/root.window_size[0]), root.rectangle_size[44][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[45]
+            Rectangle:
+                pos: root.rectangle_points_right[45][0] * (self.width/root.window_size[0]), root.rectangle_points_right[45][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[45][0] * (self.width/root.window_size[0]), root.rectangle_size[45][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[46]
+            Rectangle:
+                pos: root.rectangle_points_right[46][0] * (self.width/root.window_size[0]), root.rectangle_points_right[46][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[46][0] * (self.width/root.window_size[0]), root.rectangle_size[46][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[47]
+            Rectangle:
+                pos: root.rectangle_points_right[47][0] * (self.width/root.window_size[0]), root.rectangle_points_right[47][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[47][0] * (self.width/root.window_size[0]), root.rectangle_size[47][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[48]
+            Rectangle:
+                pos: root.rectangle_points_right[48][0] * (self.width/root.window_size[0]), root.rectangle_points_right[48][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[48][0] * (self.width/root.window_size[0]), root.rectangle_size[48][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[49]
+            Rectangle:
+                pos: root.rectangle_points_right[49][0] * (self.width/root.window_size[0]), root.rectangle_points_right[49][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[49][0] * (self.width/root.window_size[0]), root.rectangle_size[49][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[50]
+            Rectangle:
+                pos: root.rectangle_points_right[50][0] * (self.width/root.window_size[0]), root.rectangle_points_right[50][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[50][0] * (self.width/root.window_size[0]), root.rectangle_size[50][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[51]
+            Rectangle:
+                pos: root.rectangle_points_right[51][0] * (self.width/root.window_size[0]), root.rectangle_points_right[51][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[51][0] * (self.width/root.window_size[0]), root.rectangle_size[51][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[52]
+            Rectangle:
+                pos: root.rectangle_points_right[52][0] * (self.width/root.window_size[0]), root.rectangle_points_right[52][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[52][0] * (self.width/root.window_size[0]), root.rectangle_size[52][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[53]
+            Rectangle:
+                pos: root.rectangle_points_right[53][0] * (self.width/root.window_size[0]), root.rectangle_points_right[53][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[53][0] * (self.width/root.window_size[0]), root.rectangle_size[53][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[54]
+            Rectangle:
+                pos: root.rectangle_points_right[54][0] * (self.width/root.window_size[0]), root.rectangle_points_right[54][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[54][0] * (self.width/root.window_size[0]), root.rectangle_size[54][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[55]
+            Rectangle:
+                pos: root.rectangle_points_right[55][0] * (self.width/root.window_size[0]), root.rectangle_points_right[55][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[55][0] * (self.width/root.window_size[0]), root.rectangle_size[55][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[56]
+            Rectangle:
+                pos: root.rectangle_points_right[56][0] * (self.width/root.window_size[0]), root.rectangle_points_right[56][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[56][0] * (self.width/root.window_size[0]), root.rectangle_size[56][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[57]
+            Rectangle:
+                pos: root.rectangle_points_right[57][0] * (self.width/root.window_size[0]), root.rectangle_points_right[57][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[57][0] * (self.width/root.window_size[0]), root.rectangle_size[57][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[58]
+            Rectangle:
+                pos: root.rectangle_points_right[58][0] * (self.width/root.window_size[0]), root.rectangle_points_right[58][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[58][0] * (self.width/root.window_size[0]), root.rectangle_size[58][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[59]
+            Rectangle:
+                pos: root.rectangle_points_right[59][0] * (self.width/root.window_size[0]), root.rectangle_points_right[59][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[59][0] * (self.width/root.window_size[0]), root.rectangle_size[59][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[60]
+            Rectangle:
+                pos: root.rectangle_points_right[60][0] * (self.width/root.window_size[0]), root.rectangle_points_right[60][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[60][0] * (self.width/root.window_size[0]), root.rectangle_size[60][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[61]
+            Rectangle:
+                pos: root.rectangle_points_right[61][0] * (self.width/root.window_size[0]), root.rectangle_points_right[61][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[61][0] * (self.width/root.window_size[0]), root.rectangle_size[61][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[62]
+            Rectangle:
+                pos: root.rectangle_points_right[62][0] * (self.width/root.window_size[0]), root.rectangle_points_right[62][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[62][0] * (self.width/root.window_size[0]), root.rectangle_size[62][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[63]
+            Rectangle:
+                pos: root.rectangle_points_right[63][0] * (self.width/root.window_size[0]), root.rectangle_points_right[63][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[63][0] * (self.width/root.window_size[0]), root.rectangle_size[63][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[64]
+            Rectangle:
+                pos: root.rectangle_points_right[64][0] * (self.width/root.window_size[0]), root.rectangle_points_right[64][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[64][0] * (self.width/root.window_size[0]), root.rectangle_size[64][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[65]
+            Rectangle:
+                pos: root.rectangle_points_right[65][0] * (self.width/root.window_size[0]), root.rectangle_points_right[65][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[65][0] * (self.width/root.window_size[0]), root.rectangle_size[65][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[66]
+            Rectangle:
+                pos: root.rectangle_points_right[66][0] * (self.width/root.window_size[0]), root.rectangle_points_right[66][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[66][0] * (self.width/root.window_size[0]), root.rectangle_size[66][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[67]
+            Rectangle:
+                pos: root.rectangle_points_right[67][0] * (self.width/root.window_size[0]), root.rectangle_points_right[67][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[67][0] * (self.width/root.window_size[0]), root.rectangle_size[67][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[68]
+            Rectangle:
+                pos: root.rectangle_points_right[68][0] * (self.width/root.window_size[0]), root.rectangle_points_right[68][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[68][0] * (self.width/root.window_size[0]), root.rectangle_size[68][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[69]
+            Rectangle:
+                pos: root.rectangle_points_right[69][0] * (self.width/root.window_size[0]), root.rectangle_points_right[69][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[69][0] * (self.width/root.window_size[0]), root.rectangle_size[69][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[70]
+            Rectangle:
+                pos: root.rectangle_points_right[70][0] * (self.width/root.window_size[0]), root.rectangle_points_right[70][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[70][0] * (self.width/root.window_size[0]), root.rectangle_size[70][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[71]
+            Rectangle:
+                pos: root.rectangle_points_right[71][0] * (self.width/root.window_size[0]), root.rectangle_points_right[71][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[71][0] * (self.width/root.window_size[0]), root.rectangle_size[71][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[72]
+            Rectangle:
+                pos: root.rectangle_points_right[72][0] * (self.width/root.window_size[0]), root.rectangle_points_right[72][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[72][0] * (self.width/root.window_size[0]), root.rectangle_size[72][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[73]
+            Rectangle:
+                pos: root.rectangle_points_right[73][0] * (self.width/root.window_size[0]), root.rectangle_points_right[73][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[73][0] * (self.width/root.window_size[0]), root.rectangle_size[73][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[74]
+            Rectangle:
+                pos: root.rectangle_points_right[74][0] * (self.width/root.window_size[0]), root.rectangle_points_right[74][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[74][0] * (self.width/root.window_size[0]), root.rectangle_size[74][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[75]
+            Rectangle:
+                pos: root.rectangle_points_right[75][0] * (self.width/root.window_size[0]), root.rectangle_points_right[75][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[75][0] * (self.width/root.window_size[0]), root.rectangle_size[75][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[76]
+            Rectangle:
+                pos: root.rectangle_points_right[76][0] * (self.width/root.window_size[0]), root.rectangle_points_right[76][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[76][0] * (self.width/root.window_size[0]), root.rectangle_size[76][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[77]
+            Rectangle:
+                pos: root.rectangle_points_right[77][0] * (self.width/root.window_size[0]), root.rectangle_points_right[77][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[77][0] * (self.width/root.window_size[0]), root.rectangle_size[77][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[78]
+            Rectangle:
+                pos: root.rectangle_points_right[78][0] * (self.width/root.window_size[0]), root.rectangle_points_right[78][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[78][0] * (self.width/root.window_size[0]), root.rectangle_size[78][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[79]
+            Rectangle:
+                pos: root.rectangle_points_right[79][0] * (self.width/root.window_size[0]), root.rectangle_points_right[79][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[79][0] * (self.width/root.window_size[0]), root.rectangle_size[79][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[80]
+            Rectangle:
+                pos: root.rectangle_points_right[80][0] * (self.width/root.window_size[0]), root.rectangle_points_right[80][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[80][0] * (self.width/root.window_size[0]), root.rectangle_size[80][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[81]
+            Rectangle:
+                pos: root.rectangle_points_right[81][0] * (self.width/root.window_size[0]), root.rectangle_points_right[81][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[81][0] * (self.width/root.window_size[0]), root.rectangle_size[81][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[82]
+            Rectangle:
+                pos: root.rectangle_points_right[82][0] * (self.width/root.window_size[0]), root.rectangle_points_right[82][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[82][0] * (self.width/root.window_size[0]), root.rectangle_size[82][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[83]
+            Rectangle:
+                pos: root.rectangle_points_right[83][0] * (self.width/root.window_size[0]), root.rectangle_points_right[83][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[83][0] * (self.width/root.window_size[0]), root.rectangle_size[83][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[84]
+            Rectangle:
+                pos: root.rectangle_points_right[84][0] * (self.width/root.window_size[0]), root.rectangle_points_right[84][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[84][0] * (self.width/root.window_size[0]), root.rectangle_size[84][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[85]
+            Rectangle:
+                pos: root.rectangle_points_right[85][0] * (self.width/root.window_size[0]), root.rectangle_points_right[85][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[85][0] * (self.width/root.window_size[0]), root.rectangle_size[85][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[86]
+            Rectangle:
+                pos: root.rectangle_points_right[86][0] * (self.width/root.window_size[0]), root.rectangle_points_right[86][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[86][0] * (self.width/root.window_size[0]), root.rectangle_size[86][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[87]
+            Rectangle:
+                pos: root.rectangle_points_right[87][0] * (self.width/root.window_size[0]), root.rectangle_points_right[87][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[87][0] * (self.width/root.window_size[0]), root.rectangle_size[87][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[88]
+            Rectangle:
+                pos: root.rectangle_points_right[88][0] * (self.width/root.window_size[0]), root.rectangle_points_right[88][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[88][0] * (self.width/root.window_size[0]), root.rectangle_size[88][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[89]
+            Rectangle:
+                pos: root.rectangle_points_right[89][0] * (self.width/root.window_size[0]), root.rectangle_points_right[89][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[89][0] * (self.width/root.window_size[0]), root.rectangle_size[89][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[90]
+            Rectangle:
+                pos: root.rectangle_points_right[90][0] * (self.width/root.window_size[0]), root.rectangle_points_right[90][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[90][0] * (self.width/root.window_size[0]), root.rectangle_size[90][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[91]
+            Rectangle:
+                pos: root.rectangle_points_right[91][0] * (self.width/root.window_size[0]), root.rectangle_points_right[91][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[91][0] * (self.width/root.window_size[0]), root.rectangle_size[91][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[92]
+            Rectangle:
+                pos: root.rectangle_points_right[92][0] * (self.width/root.window_size[0]), root.rectangle_points_right[92][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[92][0] * (self.width/root.window_size[0]), root.rectangle_size[92][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[93]
+            Rectangle:
+                pos: root.rectangle_points_right[93][0] * (self.width/root.window_size[0]), root.rectangle_points_right[93][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[93][0] * (self.width/root.window_size[0]), root.rectangle_size[93][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[94]
+            Rectangle:
+                pos: root.rectangle_points_right[94][0] * (self.width/root.window_size[0]), root.rectangle_points_right[94][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[94][0] * (self.width/root.window_size[0]), root.rectangle_size[94][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[95]
+            Rectangle:
+                pos: root.rectangle_points_right[95][0] * (self.width/root.window_size[0]), root.rectangle_points_right[95][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[95][0] * (self.width/root.window_size[0]), root.rectangle_size[95][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[96]
+            Rectangle:
+                pos: root.rectangle_points_right[96][0] * (self.width/root.window_size[0]), root.rectangle_points_right[96][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[96][0] * (self.width/root.window_size[0]), root.rectangle_size[96][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[97]
+            Rectangle:
+                pos: root.rectangle_points_right[97][0] * (self.width/root.window_size[0]), root.rectangle_points_right[97][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[97][0] * (self.width/root.window_size[0]), root.rectangle_size[97][1] * (self.width/root.window_size[1])
+            Color:
+                rgba: root.color_right[98]
+            Rectangle:
+                pos: root.rectangle_points_right[98][0] * (self.width/root.window_size[0]), root.rectangle_points_right[98][1] * (self.width/root.window_size[1])
+                size: root.rectangle_size[98][0] * (self.width/root.window_size[0]), root.rectangle_size[98][1] * (self.width/root.window_size[1])
